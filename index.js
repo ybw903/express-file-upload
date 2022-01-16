@@ -12,14 +12,13 @@ const storage = multer.diskStorage({
 });
 const uploader = multer({ storage: storage });
 
-console.log(path.dirname);
-
 app.get("/", (req, res) => {
   console.log(req);
   res.status(200).send("hihi");
 });
 
 app.post("/", uploader.any(), (req, res) => {
+  //console.log(req);
   console.log(req);
   res.status(200).send({ test: "ok" });
 });
