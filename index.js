@@ -13,14 +13,18 @@ const storage = multer.diskStorage({
 const uploader = multer({ storage: storage });
 
 app.get("/", (req, res) => {
-  console.log(req);
   res.status(200).send("hihi");
 });
 
 app.post("/", uploader.any(), (req, res) => {
   //console.log(req);
   console.log(req);
-  res.status(200).send({ test: "ok" });
+
+  res.setHeader("Content-Type", "application/octet-stream");
+  res.setHeader("Content-Disposition", "attachment");
+  res.sendFile(req.files[0].path, (err) => {
+    console.log(err);
+  });
 });
 
 app.listen(8080, () => {
