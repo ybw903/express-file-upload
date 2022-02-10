@@ -1,7 +1,14 @@
 const express = require("express");
 const multer = require("multer");
 const path = require("path");
+const cors = require("cors");
 const app = express();
+
+const corsOptions = {
+  origin: "http://localhost:3000",
+  credentials: true,
+};
+
 const storage = multer.diskStorage({
   destination: (req, file, callback) => {
     callback(null, __dirname);
@@ -11,14 +18,14 @@ const storage = multer.diskStorage({
   },
 });
 const uploader = multer({ storage: storage });
-
+app.use(cors(corsOptions));
 app.get("/", (req, res) => {
   res.status(200).send("hihi");
 });
 
-app.post("/", uploader.any(), (req, res) => {
-  //console.log(req);
-  console.log(req);
+app.post("/process/file", uploader.any(), (req, res) => {
+  console.log("requested: /process/file");
+  console.log(req.files);
 
   res.setHeader("Content-Type", "application/octet-stream");
   res.setHeader("Content-Disposition", "attachment");
