@@ -2,6 +2,8 @@ const express = require("express");
 const multer = require("multer");
 const path = require("path");
 const cors = require("cors");
+const FormData = require("form-data");
+const fs = require("fs");
 const app = express();
 
 const corsOptions = {
@@ -32,6 +34,22 @@ app.post("/process/file", uploader.any(), (req, res) => {
   res.sendFile(req.files[0].path, (err) => {
     console.log(err);
   });
+});
+
+// 멀티파트 응답
+app.post("/v2/process/file", uploader.any(), (req, res) => {
+  console.log("requested: /v2/process/file");
+  const form = new FormData();
+  req.files.forEach((file, i) => {
+    console.log(file);
+    form.append(`file[${i}]`, fs.readFileSync(file.path), file.originalname);
+  });
+  res.setHeader(
+    "x-Content-Type",
+    "multipart/form-data; boundary=" + form._boundary
+  );
+  res.setHeader("Content-Type", "application/octet-stream");
+  form.pipe(res);
 });
 
 app.listen(8080, () => {
