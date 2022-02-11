@@ -42,7 +42,7 @@ app.post("/v2/process/file", uploader.any(), (req, res) => {
   const form = new FormData();
   req.files.forEach((file, i) => {
     console.log(file);
-    form.append(`file[${i}]`, fs.readFileSync(file.path), file.originalname);
+    form.append(`file[${i}]`, fs.readFileSync(file.path), file.filename);
   });
   res.setHeader(
     "x-Content-Type",
